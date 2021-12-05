@@ -73,8 +73,8 @@ function! s:Start()
   call s:ShowPage(0)
 
   " commands and mappings for navigation
-  command! -buffer -count=1 PresentingNext call s:NextPage(<count>)
-  command! -buffer -count=1 PresentingPrev call s:PrevPage(<count>)
+  command! -buffer -count=1 PresentingNext execute "silent normal! /«new»<CR>zt"
+  command! -buffer -count=1 PresentingPrev execute "silent normal! ?«new»<CR>zt"
   command! -buffer PresentingExit call s:Exit()
 
   " Remap <Esc>[ to itself to prevent bad behavior when, for example, <Esc> is used
@@ -84,7 +84,7 @@ function! s:Start()
 
   execute 'nnoremap <buffer> <silent> ' . g:presenting_next . ' :PresentingNext<CR>'
   execute 'nnoremap <buffer> <silent> ' . g:presenting_prev . ' :PresentingPrev<CR>'
-  execute 'nnoremap <buffer> <silent> ' . g:presenting_quit . ' :PresentingExit<CR>'
+  " execute 'nnoremap <buffer> <silent> ' . g:presenting_quit . ' :PresentingExit<CR>'
 endfunction
 
 " Functions for Navigation {{{1

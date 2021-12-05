@@ -15,23 +15,26 @@ function! markdown#format(text, last_line, state)
     let l:state.table = []
   endif
 
+  let l:padding_size = 16
+  let l:padding = repeat(' ', l:padding_size)
+
 
   " Code Blocks - Indent. Precede and follow with horzontal line
   " Keep the ``` lines if a language is specified for highlighting.
   if !l:state.comment && a:text =~? '^\s*```'
     if !l:state.code
       let l:state.code = a:text =~? '```\s*\w' ? 1 : 2
-      let new_text += ['    '.repeat('▄', &columns-8)]
-      let new_text += l:state.code == 1 ? [substitute(a:text, '^\s*', '    ', '')] : ['']
+      let new_text += [l:padding.repeat('━', &columns-(l:padding_size * 2))]
+      let new_text += l:state.code == 1 ? [substitute(a:text, '^\s*', l:padding, '')] : ['']
     else
-      let new_text += l:state.code == 1 ? [substitute(a:text, '^\s*', '    ', '')] : ['']
-      let new_text += ['    '.repeat('▀', &columns-8)]
+      let new_text += l:state.code == 1 ? [substitute(a:text, '^\s*', l:padding, '')] : ['']
+      let new_text += [l:padding.repeat('━', &columns-(l:padding_size * 2))]
       let l:state.code = 0
     endif
 
   " Avoid formatting inside a code block by having this at the top
   elseif l:state.code
-    let new_text += ['    '.a:text]
+    let new_text += [l:padding.a:text]
 
 
   " Remove commented lines.
@@ -53,6 +56,8 @@ function! markdown#format(text, last_line, state)
   elseif l:state.comment
     " Do nothing. new_text is already set to [].
 
+  elseif a:text =~? '^«p»'
+    let new_text += s:Center([substitute(a:text,'^«p»','','')], '«p»')
 
   " Tables - Render with box drawing characters.
   elseif a:text =~? '\s*|\([^|]\+|\)\+$'
@@ -79,7 +84,7 @@ function! markdown#format(text, last_line, state)
 
   " Bullet Lists - Replace with Unicode bullet
   elseif a:text =~? '^\s*[*-]'
-    let new_text += [substitute(a:text, '^\s*\zs[*-] ', '• ', '')]
+    let new_text += [substitute(a:text, '^\s*\zs[*-] ', l:padding.'• ', '')]
 
 
   " Numbered Lists - Renumber, with indentation
@@ -99,6 +104,10 @@ function! markdown#format(text, last_line, state)
     let level = strchars(matchstr(a:text, '^#\+'))
     let font = level == 1 ? g:presenting_font_large : g:presenting_font_small
     let figlet = split(system('figlet -w '.&columns.' -f '.font.' '.shellescape(substitute(a:text,'^#\+s*','',''))), "\n")
+    if level == 1
+      let new_text += repeat([''], 50)
+      let new_text += ['«new»']
+    endif
     let new_text += s:Center(figlet, '«h'.level.'»')
 
   " Headings - Centered Normal Text for ####
@@ -116,6 +125,10 @@ function! markdown#format(text, last_line, state)
     endwhile
     let new_text += ['  ▐ '.l:text]
 
+
+
+  elseif a:text =~? '^\['
+    let new_text += [substitute(a:text,'^\[','«p»'.l:padding.'\[','')]
 
   " Return text as is.
   else

@@ -33,3 +33,6 @@ syntax match presentingTableRow /^«tr».*$/ contains=presentingTableEdges,prese
 highlight default link presentingTableEdges markdownRule
 highlight default link presentingTableHeader markdownH1
 highlight default link presentingTableRow Normal
+
+syntax match presentingParagraphMarker /^«p»/ conceal
+syntax match presentingPageMarker /^«new»/ conceal
