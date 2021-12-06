@@ -15,7 +15,7 @@ function! markdown#format(text, last_line, state)
     let l:state.table = []
   endif
 
-  let l:padding_size = 16
+  let l:padding_size = 40
   let l:padding = repeat(' ', l:padding_size)
 
 
@@ -120,10 +120,10 @@ function! markdown#format(text, last_line, state)
     let l:text = substitute(a:text, '^\s*>\s*', '', '')
     while strchars(l:text) > &columns - 8
       let s = strridx(strcharpart(l:text,0,&columns-10),' ')
-      let new_text += ['  ▐ '.strcharpart(l:text,0,s)]
+      let new_text += [l:padding.'  ▐ '.strcharpart(l:text,0,s)]
       let l:text = strcharpart(l:text,s+1)
     endwhile
-    let new_text += ['  ▐ '.l:text]
+    let new_text += [l:padding.'  ▐ '.l:text]
 
 
 
