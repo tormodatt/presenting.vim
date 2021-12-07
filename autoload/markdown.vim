@@ -103,7 +103,7 @@ function! markdown#format(text, last_line, state)
   elseif a:text =~? '^#\{1,3}[^#]' && g:presenting_figlets && executable('figlet')
     let level = strchars(matchstr(a:text, '^#\+'))
     let font = level == 1 ? g:presenting_font_large : g:presenting_font_small
-    let figlet = split(system('figlet -w '.&columns.' -f '.font.' '.shellescape(substitute(a:text,'^#\+s*','',''))), "\n")
+    let figlet = split(system('toilet -w '.&columns.' -f '.font.' '.shellescape(substitute(a:text,'^#\+s*','',''))), "\n")
     if level == 1
       let new_text += repeat([''], 50)
       let new_text += ['«new»']
