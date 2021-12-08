@@ -15,7 +15,7 @@ function! markdown#format(text, last_line, state)
     let l:state.table = []
   endif
 
-  let l:padding_size = 40
+  let l:padding_size = &columns / 5
   let l:padding = repeat(' ', l:padding_size)
 
 
